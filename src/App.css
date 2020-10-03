@@ -1,0 +1,18 @@
+.App {
+  -ms-box-sizing:content-box;
+  -moz-box-sizing:content-box;
+  -webkit-box-sizing:content-box; 
+  box-sizing:content-box;
+}
+
+.App .Title{
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.App-Container {
+  display: flex;
+  flex-flow: row wrap;
+  margin: 0 auto;
+  width: fit-content;
+}
