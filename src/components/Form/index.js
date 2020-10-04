@@ -14,13 +14,12 @@ class Form extends React.Component {
     handleChange = event  => {
         const {name, value} = event.target
         this.setState(prevState => ({...prevState, [name]: value}))
-        console.log(value)
     }
     
     handleSubmit = e => {
         e.preventDefault()
         const dateTime = new Date(this.state.eventDate+"T"+this.state.eventTime)
-        const eventObj = {name: this.state.eventName, date: dateTime, time: this.state.eventTime}
+        const eventObj = {name: this.state.eventName, date: dateTime}
         this.props.handleEvent(eventObj)
         this.resetState()
     }
@@ -30,42 +29,37 @@ class Form extends React.Component {
     }
 
     render() {
+        const {eventName, eventDate, eventTime} = this.state
         return(
           <Container>
               <FormContainer >
                   <InputContainer>
-                      <label>
-                          Nome:
-                      </label>
+                      <label>Nome:</label>
                       <input 
                         name="eventName" 
-                        value={this.state.eventName} 
+                        value={eventName} 
                         onChange={this.handleChange} 
                         type="text" 
                         className="form-control" 
                       />
                   </InputContainer>
                   <InputContainer>
-                      <label>
-                          Data:
-                      </label>
+                      <label>Data:</label>
                       <input 
                           className="form-control"
                           name="eventDate"
                           type="date"
-                          value={this.state.eventDate}
+                          value={eventDate}
                           onChange={this.handleChange}
                       />
                   </InputContainer>
                   <InputContainer>
-                      <label>
-                          Horário:
-                      </label>
+                      <label> Horário:</label>
                       <input 
                           className="form-control"
                           name="eventTime"
                           type="time"
-                          value={this.state.eventTime}
+                          value={eventTime}
                           onChange={this.handleChange}
                       />
                   </InputContainer>
