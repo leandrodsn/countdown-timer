@@ -2,51 +2,44 @@ import React from 'react';
 
 import { Container, TimerWrapper, TimeList } from './styles';
 
+export const FormattedDate = props => <small>{props.date.toLocaleString()}</small>
+
 class Timer extends React.Component {
   constructor(props) {
       super(props)
-      this.state = {displayDate: props.event.date.toLocaleString(), days: null, hours: null, minutes: null, seconds: null, isCounting: false}
-      this.getDifferences = this.getDifferences.bind(this)
-      this.decrementDate = this.decrementDate.bind(this)
+      this.state = {days: 0, hours: 0, minutes: 0, seconds: 0}
+      this.getRemainingTime = this.getRemainingTime.bind(this)
+      this.decrementTime = this.decrementTime.bind(this)
   }
   
-  componentDidMount() {
-      this.TimerID = setInterval(() => this.decrementDate(), 1000)
+  componentDidUpdate(){
+    if(this.TimerID) {
+      clearTimeout(this.TimerID)
+    }
+    if(this.props.isCounting){
+      this.TimerID = setTimeout(() => this.decrementTime(), 1000)
+    }
   }
 
-  componentWillUnmount() {
-      clearInterval(this.TimerId)
+  decrementTime() {
+    const timeData = this.getRemainingTime(this.props.event.date)
+    this.setState({days: timeData.days, hours: timeData.hours, minutes: timeData.minutes, seconds: timeData.seconds})
+    if(timeData.total <= 0){
+      this.props.handleCounter()
+    }
   }
 
-  componentDidUpdate(prevProps) {
-      if(this.props.event.date !== prevProps.event.date){
-          this.currenteDate = new Date()
-          this.getDifferences(this.props.event.date, this.currenteDate)
-          //this.setState(prev => ({...prev, displayDate: this.props.event.date.toLocaleString(), isCounting: true}))
-      }
+  getRemainingTime(endTime) {
+    const total = Date.parse(endTime) - Date.parse(new Date())
+    const diffS = Math.floor( (total/1000) % 60 )
+    const diffM = Math.floor( (total/1000/60) % 60 )
+    const diffH = Math.floor( (total/(1000*60*60)) % 24 )
+    const diffD = Math.floor( (total/(1000*60*60*24)) )
+    return { total: total, seconds: diffS, minutes: diffM, hours: diffH, days: diffD}
   }
-
-  getDifferences(event, now) {
-      var diff = Math.abs(event - now) / 1000
-      var diffDays = Math.floor(diff / (60 * 60 * 24))
-      diff -=  diffDays * (60 * 60 * 24)
-      var diffHours = Math.floor(diff / (60 * 60 )) % 24
-      diff -=  diffHours * (60 * 60 )
-      var diffMinutes = Math.floor(diff / 60) % 60
-      diff -=  diffMinutes * 60
-      var diffSeconds = Math.floor(diff) % 60
-      this.setState(prevState => ({...prevState, days: diffDays, hours: diffHours, minutes: diffMinutes, seconds: diffSeconds}))
-  }
-
-  decrementDate() {
-      this.currenteDate = new Date()
-      this.getDifferences(this.props.event.date, this.currenteDate)
-  }
-  
+    
   render() {
-      const isCounting = this.state.isCounting
       return (
-          
         <Container>
               <TimerWrapper>
                   <strong className="EventName">{this.props.event.name}</strong>
@@ -67,8 +60,9 @@ class Timer extends React.Component {
                           <div className="ItemTime"><b>{this.state.seconds}</b></div>
                           <small>Segundos</small>
                         </li>
+                        {this.state.isCounting}
                   </TimeList>
-                  <span>{this.state.displayDate}</span>
+                  <FormattedDate date={this.props.event.date} />
               </TimerWrapper>
         </Container>
       )
