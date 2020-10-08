@@ -64,7 +64,7 @@ class Form extends React.Component {
                       />
                   </InputContainer>
                   <InputContainer>
-                      <button className="btn" type="submit" onClick={this.handleSubmit}>
+                      <button className="btn" type="submit" onClick={this.handleSubmit} disabled={this.props.isCounting}>
                               Start
                       </button>
                   </InputContainer>

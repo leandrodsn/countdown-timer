@@ -21,7 +21,7 @@ function App() {
       <div className="App">
         <h2 className="Title">Countdown Timer</h2>
         <div className="App-Container">
-          <Form handleEvent={handleEvent}/>
+          <Form handleEvent={handleEvent} isCounting={isCounting}/>
           <Timer event={eventState} handleCounter={handleCounter} isCounting={isCounting}/>
         </div>
       </div>
